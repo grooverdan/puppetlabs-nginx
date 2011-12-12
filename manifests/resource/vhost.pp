@@ -1,4 +1,4 @@
-# define: nginx::resource::location
+# define: nginx::resource::vhost
 #
 # This definition creates a new location entry within a virtual host
 #
