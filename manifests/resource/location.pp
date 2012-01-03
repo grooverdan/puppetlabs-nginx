@@ -14,6 +14,7 @@
 #   [*fastcgi_params*] - optional alternative fastcgi_params file to use
 #   [*fastcgi_script*] - optional SCRIPT_FILE parameter
 #   [*ssl*]            - Indicates whether to setup SSL bindings for this location.
+#   [*try_files*]      - An array of file locations to try
 #   [*option*]         - Reserved for future use
 #
 # Actions:
@@ -37,6 +38,7 @@ define nginx::resource::location(
   $fastcgi_params = '/etc/nginx/fastcgi_params',
   $fastcgi_script = undef,
   $ssl            = false,
+  $try_files      = undef,
   $option         = undef,
   $location
 ) {
