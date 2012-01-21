@@ -10,7 +10,7 @@
 #   [*index_files*] - Default index files for NGINX to read when traversing a directory
 #   [*proxy*]       - Proxy server(s) for a location to connect to. Accepts a single value, can be used in conjunction
 #                     with nginx::resource::upstream
-#   [*ssl*]         - Indicates whether to setup SSL bindings for this location.
+#   [*ssl*]         - BOOL value to indicate whether to setup SSL bindings for this location.
 #   [*option*]      - Reserved for future use
 #
 # Actions:
@@ -72,7 +72,7 @@ define nginx::resource::location(
   }
 
   ## Only create SSL Specific locations if $ssl is true.
-  if ($ssl == 'true') {
+  if ($ssl) {
     file {"${nginx::config::nx_temp_dir}/nginx.d/${vhost}-800-${name}-ssl":
       ensure  => $ensure_real,
       content => $content_real,
