@@ -3,15 +3,17 @@
 # This definition creates a new location entry within a virtual host
 #
 # Parameters:
-#   [*ensure*]      - Enables or disables the specified location (present|absent)
-#   [*vhost*]       - Defines the default vHost for this location entry to include with
-#   [*location*]    - Specifies the URI associated with this location entry
-#   [*www_root*]    - Specifies the location on disk for files to be read from. Cannot be set in conjunction with $proxy
-#   [*index_files*] - Default index files for NGINX to read when traversing a directory
-#   [*proxy*]       - Proxy server(s) for a location to connect to. Accepts a single value, can be used in conjunction
-#                     with nginx::resource::upstream
-#   [*ssl*]         - Indicates whether to setup SSL bindings for this location.
-#   [*option*]      - Reserved for future use
+#   [*ensure*]        - Enables or disables the specified location (present|absent)
+#   [*vhost*]         - Defines the default vHost for this location entry to include with
+#   [*location*]      - Specifies the URI associated with this location entry
+#   [*www_root*]      - Specifies the location on disk for files to be read from. Cannot be set in conjunction with $proxy
+#   [*index_files*]   - Default index files for NGINX to read when traversing a directory
+#   [*proxy*]         - Proxy server(s) for a location to connect to. Accepts a single value, can be used in conjunction
+#                       with nginx::resource::upstream
+#   [*ssl*]           - Indicates whether to setup SSL bindings for this location.
+#   [*extra*]         - An array of extra directives to apply at this location.
+#   [*rewrite_rules*] - An array of rewrite rules directives to apply at this location.
+#   [*option*]        - Reserved for future use
 #
 # Actions:
 #
@@ -25,13 +27,14 @@
 #    vhost    => 'test2.local',
 #  }
 define nginx::resource::location(
-  $ensure      = present,
-  $vhost       = undef,
-  $www_root    = undef,
-  $index_files = ['index.html', 'index.htm', 'index.php'],
-  $proxy       = undef,
-  $ssl         = false,
-  $option      = undef,
+  $ensure        = present,
+  $vhost         = undef,
+  $www_root      = undef,
+  $index_files   = ['index.html', 'index.htm', 'index.php'],
+  $proxy         = undef,
+  $extra         = undef,
+  $rewrite_rules = undef,
+  $option        = undef,
   $location
 ) {
   File {
@@ -58,8 +61,8 @@ define nginx::resource::location(
   if ($vhost == undef) {
     fail('Cannot create a location reference without attaching to a virtual host')
   }
-  if (($www_root == undef) and ($proxy == undef)) {
-    fail('Cannot create a location reference without a www_root or proxy defined')
+  if (($www_root == undef) and ($proxy == undef) and ($extra == undef)) {
+    fail('Cannot create a location reference without a www_root, proxy, or extra defined')
   }
   if (($www_root != undef) and ($proxy != undef)) {
     fail('Cannot define both directory and proxy in a virtual host')
